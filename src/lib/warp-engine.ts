@@ -850,6 +850,7 @@ export function generateFullConfig(
     keyPair = generateWireGuardKeyPair();
   }
 
+  const randomId = String(Math.floor(1000000 + Math.random() * 9000000));
   let configText = "";
   let filename = `wvfwarp-${req.protocol}`;
   let fileExtension = ".conf";
@@ -859,7 +860,7 @@ export function generateFullConfig(
     case "amneziawg-2.0":
     case "amneziawg-1.5":
       configText = generateAmneziaWgConf(req, keyPair);
-      filename = `wvfwarp-${req.protocol}-${Date.now().toString().slice(-4)}`;
+      filename = `WARP${randomId}`;
       fileExtension = ".conf";
       instructions = [
         "Download or copy the WVFWARP AmneziaWG configuration (.conf).",
@@ -920,7 +921,7 @@ export function generateFullConfig(
   const shareToken = crypto.randomBytes(8).toString("hex");
 
   return {
-    title: req.title || `WVFWARP ${req.protocol.toUpperCase()} Shield`,
+    title: req.title || `WARP ${randomId}`,
     protocol: req.protocol,
     configText,
     filename: `${filename}${fileExtension}`,
