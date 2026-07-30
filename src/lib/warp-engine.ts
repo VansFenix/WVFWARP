@@ -586,13 +586,9 @@ AllowedIPs = ${allowedIps}
 Endpoint = ${ep}
 `;
 
-  if (keyPair.reservedBits || req.reservedBits) {
-    conf += `# Cloudflare WARP Reserved Bits (for Client identification)
-Reserved = ${req.reservedBits || keyPair.reservedBits || "[0, 0, 0]"}
-`;
-  }
-
-  conf += `PersistentKeepalive = 25
+  const raw = (req.reservedBits || keyPair.reservedBits || "[0, 0, 0]").replace(/\[|\]/g, "");
+  conf += `# Cloudflare WARP Reserved Bits (for Client identification)
+Reserved = ${raw}
 `;
 
   return conf;
