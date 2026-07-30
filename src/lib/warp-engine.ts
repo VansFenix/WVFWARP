@@ -502,27 +502,21 @@ export async function registerWithWarp(clientPubKey: string): Promise<{
   reservedBits: string;
 } | null> {
   try {
-    const body = JSON.stringify({
-      key: clientPubKey,
-      install_id: "",
-      fcm_token: "",
-      tos: new Date().toISOString().split("T")[0],
-      model: "PC",
-      serial_number: "",
-      locale: "ru_RU",
-    });
+    const body = JSON.stringify({ key: clientPubKey });
     const res = await fetch("https://api.cloudflareclient.com/v0a802/reg", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "User-Agent": "okhttp/4.12.0" },
+      headers: { "Content-Type": "application/json", "User-Agent": "1.1.1.1 / 6.18 (Android 14)" },
       body,
     });
     if (!res.ok) return null;
     const data = await res.json();
+    const v4 = data.config?.interface?.addresses?.v4 || "172.16.0.2";
+    const v6 = data.config?.interface?.addresses?.v6 || "2606:4700:110:8f00::1/128";
     return {
-      serverPubKey: data.config?.peers?.[0]?.public_key || data.account?.license || "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-      clientV4: data.config?.interface?.addresses?.v4 || "172.16.0.2/32",
-      clientV6: data.config?.interface?.addresses?.v6 || `2606:4700:110:8f00::${crypto.randomBytes(4).toString("hex")}/128`,
-      reservedBits: data.config?.interface?.addresses?.v4?.reserved_bits || "[0, 0, 0]",
+      serverPubKey: data.config?.peers?.[0]?.public_key || "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      clientV4: v4.includes("/") ? v4 : `${v4}/32`,
+      clientV6: v6.includes("/") ? v6 : `${v6}/128`,
+      reservedBits: "[0, 0, 0]",
     };
   } catch {
     return null;
