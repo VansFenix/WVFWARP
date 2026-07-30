@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const payload = generateFullConfig(body);
+    const payload = await generateFullConfig(body);
 
     let dbRecordId = 0;
     try {

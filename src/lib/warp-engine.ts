@@ -485,6 +485,50 @@ export interface GeneratedConfigPayload {
   instructions: string[];
 }
 
+export function generateRawKeyPair(): { privateKey: string; publicKey: string } {
+  const { privateKey, publicKey } = crypto.generateKeyPairSync("x25519", {
+    publicKeyEncoding: { type: "spki", format: "der" },
+    privateKeyEncoding: { type: "pkcs8", format: "der" },
+  });
+  const rawPub = publicKey.subarray(publicKey.length - 32);
+  const rawPriv = privateKey.subarray(privateKey.length - 32);
+  return { privateKey: rawPriv.toString("base64"), publicKey: rawPub.toString("base64") };
+}
+
+export async function registerWithWarp(clientPubKey: string): Promise<{
+  serverPubKey: string;
+  clientV4: string;
+  clientV6: string;
+  reservedBits: string;
+} | null> {
+  try {
+    const body = JSON.stringify({
+      key: clientPubKey,
+      install_id: "",
+      fcm_token: "",
+      tos: new Date().toISOString().split("T")[0],
+      model: "PC",
+      serial_number: "",
+      locale: "ru_RU",
+    });
+    const res = await fetch("https://api.cloudflareclient.com/v0a802/reg", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "User-Agent": "okhttp/4.12.0" },
+      body,
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return {
+      serverPubKey: data.config?.peers?.[0]?.public_key || data.account?.license || "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      clientV4: data.config?.interface?.addresses?.v4 || "172.16.0.2/32",
+      clientV6: data.config?.interface?.addresses?.v6 || `2606:4700:110:8f00::${crypto.randomBytes(4).toString("hex")}/128`,
+      reservedBits: data.config?.interface?.addresses?.v4?.reserved_bits || "[0, 0, 0]",
+    };
+  } catch {
+    return null;
+  }
+}
+
 export function generateWireGuardKeyPair(): {
   privateKey: string;
   publicKey: string;
@@ -842,9 +886,9 @@ export function generateSingBoxJson(
   return JSON.stringify(jsonConfig, null, 2);
 }
 
-export function generateFullConfig(
+export async function generateFullConfig(
   req: ConfigGenerateRequest
-): GeneratedConfigPayload {
+): Promise<GeneratedConfigPayload> {
   let keyPair: {
     privateKey: string;
     publicKey: string;
@@ -866,7 +910,19 @@ export function generateFullConfig(
       reservedBits: req.reservedBits || "[0, 0, 0]",
     };
   } else {
-    keyPair = generateWireGuardKeyPair();
+    const rawKey = generateRawKeyPair();
+    const reg = await registerWithWarp(rawKey.publicKey);
+    if (reg) {
+      keyPair = {
+        privateKey: rawKey.privateKey,
+        publicKey: reg.serverPubKey,
+        clientV4: reg.clientV4,
+        clientV6: reg.clientV6,
+        reservedBits: reg.reservedBits,
+      };
+    } else {
+      keyPair = generateWireGuardKeyPair();
+    }
   }
 
   const randomId = String(Math.floor(1000000 + Math.random() * 9000000));

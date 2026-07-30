@@ -45,7 +45,7 @@ export async function GET(
       routingMode: (found.routingMode as any) || "all",
     };
 
-    const payload = generateFullConfig(reqObj);
+    const payload = await generateFullConfig(reqObj);
 
     return NextResponse.json({
       success: true,
