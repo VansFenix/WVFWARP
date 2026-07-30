@@ -5,3 +5,6 @@ data/database.sqlite-wal
 data/database.sqlite-shm
 *.env
 *.env.local
+
+.vercel
+.env*
