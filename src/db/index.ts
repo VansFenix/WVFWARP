@@ -8,14 +8,16 @@ let _db: ReturnType<typeof drizzle> | null = null;
 
 function getPool(): Pool {
   if (!_pool) {
-    let databaseUrl = process.env.DATABASE_URL;
+    const databaseUrl = process.env.DATABASE_URL;
     if (!databaseUrl) {
       throw new Error("DATABASE_URL is required");
     }
-    if (!databaseUrl.includes("sslmode=")) {
-      databaseUrl += "?sslmode=require";
-    }
-    _pool = new Pool({ connectionString: databaseUrl });
+    const url = new URL(databaseUrl);
+    url.searchParams.set("sslmode", "no-verify");
+    _pool = new Pool({
+      connectionString: url.toString(),
+      ssl: { rejectUnauthorized: false },
+    });
   }
   return _pool;
 }
