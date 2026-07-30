@@ -553,8 +553,6 @@ export function generateAmneziaWgConf(
   const isV2 = req.protocol === "amneziawg-2.0";
 
   let conf = `[Interface]
-# WVFWARP — Generated for ${req.protocol.toUpperCase()}
-# Cloudflare WARP Obfuscation Profile (MTU: ${req.mtu})
 PrivateKey = ${keyPair.privateKey}
 Address = ${keyPair.clientV4}, ${keyPair.clientV6}
 DNS = ${dnsString}
