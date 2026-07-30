@@ -580,6 +580,7 @@ I4 = ${obf.i4 || "78b301aa"}
 PublicKey = ${keyPair.publicKey}
 AllowedIPs = ${allowedIps}
 Endpoint = ${ep}
+PersistentKeepalive = 25
 `;
 
   return conf;
