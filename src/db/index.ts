@@ -17,6 +17,12 @@ function getPool(): Pool {
     _pool = new Pool({
       connectionString: url.toString(),
       ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 8000,
+      max: 3,
+      idleTimeoutMillis: 10000,
+    });
+    _pool.on("error", (err: any) => {
+      console.error("Unexpected DB pool error:", err?.message, err?.code);
     });
   }
   return _pool;

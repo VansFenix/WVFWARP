@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { db, obfuscationPresets } from "@/db";
 import { ensureSeeded } from "@/lib/seed";
+import { builtinPresets, presetCategories } from "@/lib/presets-data";
 import { desc, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const category = searchParams.get("category");
+
   try {
     await ensureSeeded();
-    const { searchParams } = new URL(request.url);
-    const category = searchParams.get("category");
-
     let presets;
     if (category && category !== "ALL") {
       presets = await db
@@ -22,14 +23,15 @@ export async function GET(request: Request) {
         .from(obfuscationPresets)
         .orderBy(desc(obfuscationPresets.likesCount));
     }
-
-    return NextResponse.json({ success: true, presets });
+    return NextResponse.json({ success: true, presets, categories: presetCategories, source: "db" });
   } catch (error) {
-    console.error("Failed to fetch presets:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to fetch presets" },
-      { status: 500 }
-    );
+    console.warn("DB presets unavailable, using embedded data:", error);
+    let result = builtinPresets;
+    if (category && category !== "ALL") {
+      result = builtinPresets.filter((p) => p.category === category);
+    }
+    result.sort((a, b) => b.likesCount - a.likesCount);
+    return NextResponse.json({ success: true, presets: result, categories: presetCategories, source: "embedded" });
   }
 }
 
