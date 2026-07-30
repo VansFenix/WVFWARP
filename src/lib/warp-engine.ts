@@ -580,15 +580,9 @@ I4 = ${obf.i4 || "78b301aa"}
 
   conf += `
 [Peer]
-# Cloudflare WARP Server Anycast Endpoint
 PublicKey = ${keyPair.publicKey}
 AllowedIPs = ${allowedIps}
 Endpoint = ${ep}
-`;
-
-  const raw = (req.reservedBits || keyPair.reservedBits || "[0, 0, 0]").replace(/\[|\]/g, "");
-  conf += `# Cloudflare WARP Reserved Bits (for Client identification)
-Reserved = ${raw}
 `;
 
   return conf;
