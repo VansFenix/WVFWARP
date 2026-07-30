@@ -1,18 +1,13 @@
 === ДЕПЛОЙ НА VERCEL + SUPABASE ===
 
-1. Получить строку подключения к БД:
-   - https://supabase.com/dashboard/project/tkkydtebiicvljtbwdli
-   - Кнопка "Connect" → вкладка "Session pooler" → скопировать URI
-   - Строка вида: postgresql://postgres.PROJECT_REF:ПАРОЛЬ@aws-0-REGION.pooler.supabase.com:5432/postgres
+Строка подключения уже готова — файл БД.txt
 
-2. Задеплоить на Vercel:
+1. Задеплоить на Vercel:
    - https://vercel.com → Add New Project → VansFenix/WVFWARP
    - В Environment Variables добавить:
-     DATABASE_URL = строка из шага 1
+     DATABASE_URL = строка из БД.txt (всё вместе, включая DATABASE_URL=)
    - Deploy
 
-3. Накатить схему (один раз):
-   Открыть терминал и выполнить:
-   DATABASE_URL="строка_из_шага_1" npx drizzle-kit push
+2. Накатить схему БД (Vercel сам выполнит при деплое через drizzle-kit push)
 
 Всё. Сайт будет работать.
