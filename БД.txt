@@ -1,1 +1,1 @@
-DATABASE_URL=postgresql://postgres:supreme_214**1@db.tkkydtebiicvljtbwdli.supabase.co:5432/postgres?sslmode=require
+postgresql://postgres:supreme_214**1@db.tkkydtebiicvljtbwdli.supabase.co:5432/postgres?sslmode=require

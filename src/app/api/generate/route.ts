@@ -39,8 +39,8 @@ export async function POST(request: Request) {
         })
         .returning({ id: generatedConfigs.id });
       dbRecordId = saved.id;
-    } catch (dbErr) {
-      console.warn("Could not save to DB (will return generated config):", dbErr);
+    } catch (dbErr: any) {
+      console.warn("Could not save to DB (will return generated config):", dbErr?.message);
     }
 
     return NextResponse.json({

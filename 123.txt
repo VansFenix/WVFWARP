@@ -1,17 +1,1 @@
-https://nextjs.org/telemetry
-▲ Next.js 16.2.6 (Turbopack)
-  Creating an optimized production build ...
-✓ Compiled successfully in 7.2s
-  Running TypeScript ...
-  Finished TypeScript in 4.6s ...
-  Collecting page data using 1 worker ...
-Error: DATABASE_URL is required
-    at <unknown> (.next/server/chunks/[root-of-the-server]__05dy89q._.js:8:51069)
-> Build error occurred
-Error: Failed to collect page data for /api/config/[token]
-    at ignore-listed frames {
-  type: 'Error'
-}
-Error: Command "npm run build" exited with 1
-Deployment Summary
-Assigning Custom Domains
+https://wvfwarp-brown.vercel.app/
