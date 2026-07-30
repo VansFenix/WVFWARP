@@ -2,8 +2,14 @@ import { drizzle } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
 import * as schema from "./schema";
 import path from "path";
+import fs from "fs";
 
-const dbPath = path.join(process.cwd(), "data", "database.sqlite");
+const dbPath = process.env.DB_PATH || path.join(process.cwd(), "data", "database.sqlite");
+
+const dbDir = path.dirname(dbPath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 
 const globalForDb = globalThis as typeof globalThis & {
   __wvfwarpSqliteClient?: ReturnType<typeof createClient>;
