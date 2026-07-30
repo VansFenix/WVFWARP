@@ -1,0 +1,192 @@
+import { db, obfuscationPresets, warpKeysPool } from "@/db";
+import { count } from "drizzle-orm";
+import { generateWireGuardKeyPair } from "./warp-engine";
+
+export async function ensureSeeded() {
+  try {
+    const presetCount = await db
+      .select({ count: count() })
+      .from(obfuscationPresets);
+
+    if (presetCount[0]?.count === 0) {
+      await db.insert(obfuscationPresets).values([
+        {
+          name: "RU / CIS DPI Shield (AWG 2.0)",
+          description:
+            "Recommended for bypassing TSPU / DPI in Russia & CIS. Uses AWG 2.0 magic headers and randomized junk packets.",
+          category: "AWG-2.0",
+          protocol: "amneziawg-2.0",
+          params: JSON.stringify({
+            jc: 7,
+            jmin: 50,
+            jmax: 1000,
+            s1: 84,
+            s2: 54,
+            h1: 1778114400,
+            h2: 1140023414,
+            h3: 1883501258,
+            h4: 1346001719,
+            i1: "4cfa7107",
+            i2: "64fa8331",
+            i3: "21b36991",
+            i4: "78b301aa",
+          }),
+          recommendedEndpoint: "162.159.193.5:2408",
+          recommendedDns: "1.1.1.1, 1.0.0.1",
+          isOfficial: true,
+          likesCount: 1420,
+        },
+        {
+          name: "Mobile LTE / 5G DPI Bypass (AWG 2.0)",
+          description:
+            "Optimized for mobile operators (MTS, Megafon, Beeline, Tele2, Yota). Reduced Jmin/Jmax to preserve battery & speed.",
+          category: "AWG-2.0",
+          protocol: "amneziawg-2.0",
+          params: JSON.stringify({
+            jc: 4,
+            jmin: 30,
+            jmax: 400,
+            s1: 70,
+            s2: 90,
+            h1: 1033100222,
+            h2: 1938392111,
+            h3: 1782390123,
+            h4: 1293847291,
+            i1: "e02b7811",
+            i2: "c1920844",
+            i3: "f0912a77",
+            i4: "00823c12",
+          }),
+          recommendedEndpoint: "188.114.97.3:2408",
+          recommendedDns: "94.140.14.14, 94.140.15.15",
+          isOfficial: true,
+          likesCount: 890,
+        },
+        {
+          name: "AmneziaWG 1.5 Classic Breaker",
+          description:
+            "Compatible with AmneziaWG 1.5 routers and clients. Reliable obfuscation without init signatures.",
+          category: "AWG-1.5",
+          protocol: "amneziawg-1.5",
+          params: JSON.stringify({
+            jc: 3,
+            jmin: 40,
+            jmax: 70,
+            s1: 40,
+            s2: 80,
+            h1: 1010101,
+            h2: 2020202,
+            h3: 3030303,
+            h4: 4040404,
+            i1: "",
+            i2: "",
+            i3: "",
+            i4: "",
+          }),
+          recommendedEndpoint: "162.159.192.1:2408",
+          recommendedDns: "8.8.8.8, 8.8.4.4",
+          isOfficial: true,
+          likesCount: 630,
+        },
+        {
+          name: "Aggressive Stealth Shield (AWG 1.5)",
+          description:
+            "High junk packet volume for severe DPI filters. Masks traffic pattern as random UDP streams.",
+          category: "STEALTH",
+          protocol: "amneziawg-1.5",
+          params: JSON.stringify({
+            jc: 9,
+            jmin: 80,
+            jmax: 1200,
+            s1: 112,
+            s2: 88,
+            h1: 1829340911,
+            h2: 1439201923,
+            h3: 1782392811,
+            h4: 1283920191,
+            i1: "",
+            i2: "",
+            i3: "",
+            i4: "",
+          }),
+          recommendedEndpoint: "188.114.96.1:2408",
+          recommendedDns: "9.9.9.9, 149.112.112.112",
+          isOfficial: true,
+          likesCount: 512,
+        },
+        {
+          name: "Low-Latency Gaming Bypass (AWG 2.0)",
+          description:
+            "Minimal obfuscation overhead for lowest ping in CS2, Valorant, Dota 2, and Discord.",
+          category: "GAMING",
+          protocol: "amneziawg-2.0",
+          params: JSON.stringify({
+            jc: 2,
+            jmin: 20,
+            jmax: 100,
+            s1: 30,
+            s2: 40,
+            h1: 1555444333,
+            h2: 1444333222,
+            h3: 1333222111,
+            h4: 1222111000,
+            i1: "11223344",
+            i2: "55667788",
+            i3: "99aabbcc",
+            i4: "ddeeff00",
+          }),
+          recommendedEndpoint: "162.159.193.5:2408",
+          recommendedDns: "1.1.1.1, 1.0.0.1",
+          isOfficial: true,
+          likesCount: 1105,
+        },
+        {
+          name: "Wiresocks / Windows SOCKS5 Bypass",
+          description:
+            "Optimized MTU and endpoint for Wiresocks client with application split-tunneling.",
+          category: "AWG-2.0",
+          protocol: "wiresocks",
+          params: JSON.stringify({
+            jc: 5,
+            jmin: 40,
+            jmax: 500,
+            s1: 64,
+            s2: 64,
+            h1: 1778114400,
+            h2: 1140023414,
+            h3: 1883501258,
+            h4: 1346001719,
+            i1: "4cfa7107",
+            i2: "64fa8331",
+            i3: "21b36991",
+            i4: "78b301aa",
+          }),
+          recommendedEndpoint: "188.114.97.3:2408",
+          recommendedDns: "1.1.1.1, 1.0.0.1",
+          isOfficial: true,
+          likesCount: 470,
+        },
+      ]);
+    }
+
+    const poolCount = await db.select({ count: count() }).from(warpKeysPool);
+    if (poolCount[0]?.count === 0) {
+      const keysToSeed = [];
+      for (let i = 1; i <= 5; i++) {
+        const kp = generateWireGuardKeyPair();
+        keysToSeed.push({
+          label: `WARP Key Pool #${i} (Clean V4/V6)`,
+          privateKey: kp.privateKey,
+          publicKey: kp.publicKey,
+          clientIpV4: kp.clientV4,
+          clientIpV6: kp.clientV6,
+          reservedBits: kp.reservedBits,
+          isAssigned: false,
+        });
+      }
+      await db.insert(warpKeysPool).values(keysToSeed);
+    }
+  } catch (err) {
+    console.error("Error ensuring seeded database:", err);
+  }
+}
