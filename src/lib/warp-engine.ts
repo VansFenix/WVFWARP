@@ -554,7 +554,8 @@ export function generateAmneziaWgConf(
 
   let conf = `[Interface]
 PrivateKey = ${keyPair.privateKey}
-Address = ${keyPair.clientV4}, ${keyPair.clientV6}
+Address = ${keyPair.clientV4}
+Address = ${keyPair.clientV6}
 DNS = ${dnsString}
 MTU = ${req.mtu}
 Jc = ${obf.jc}
@@ -601,9 +602,9 @@ export function generateWireGuardConf(
   const ep = `${req.endpointAddress}:${req.endpointPort}`;
 
   return `[Interface]
-# WVFWARP — Standard WireGuard Config for Cloudflare WARP
 PrivateKey = ${keyPair.privateKey}
-Address = ${keyPair.clientV4}, ${keyPair.clientV6}
+Address = ${keyPair.clientV4}
+Address = ${keyPair.clientV6}
 DNS = ${dnsString}
 MTU = ${req.mtu}
 
@@ -629,17 +630,12 @@ export function generateWiresocksConf(
   const allowedIps = resolveAllowedIps(req);
   const ep = `${req.endpointAddress}:${req.endpointPort}`;
 
-  return `# WVFWARP — Wiresocks Profile for Cloudflare WARP
-# Works with wiresocks-client (Windows/Linux SOCKS5 & Split-Tunneling)
-[Interface]
+  return `[Interface]
 PrivateKey = ${keyPair.privateKey}
-Address = ${keyPair.clientV4}, ${keyPair.clientV6}
+Address = ${keyPair.clientV4}
+Address = ${keyPair.clientV6}
 DNS = ${dnsString}
 MTU = ${req.mtu}
-# Wiresocks Advanced App Routing (Uncomment to customize):
-# AllowedApps = chrome.exe, firefox.exe, telegram.exe, discord.exe
-# DisallowedApps = steam.exe, qbittorrent.exe
-# Socks5Proxy = 127.0.0.1:1080
 
 [Peer]
 PublicKey = ${keyPair.publicKey}
