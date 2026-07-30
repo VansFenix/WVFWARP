@@ -546,16 +546,15 @@ export function generateAmneziaWgConf(
     reservedBits?: string;
   }
 ): string {
-  const dnsString = resolveDnsServers(req);
-  const allowedIps = resolveAllowedIps(req);
-  const ep = `${req.endpointAddress}:${req.endpointPort}`;
   const obf = req.obfuscation;
   const isV2 = req.protocol === "amneziawg-2.0";
+  const ep = `${req.endpointAddress}:${req.endpointPort}`;
+  const allowedIps = req.routingMode === "all" ? "0.0.0.0/0" : resolveAllowedIps(req);
 
   let conf = `[Interface]
 PrivateKey = ${keyPair.privateKey}
 Address = ${keyPair.clientV4}
-DNS = ${dnsString}
+DNS = 1.1.1.1
 MTU = ${req.mtu}
 Jc = ${obf.jc}
 Jmin = ${obf.jmin}
