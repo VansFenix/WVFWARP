@@ -23,12 +23,7 @@ export async function GET(request: Request) {
         .orderBy(desc(obfuscationPresets.likesCount));
     }
 
-    const parsed = presets.map((p) => ({
-      ...p,
-      params: JSON.parse(p.params),
-    }));
-
-    return NextResponse.json({ success: true, presets: parsed });
+    return NextResponse.json({ success: true, presets });
   } catch (error) {
     console.error("Failed to fetch presets:", error);
     return NextResponse.json(
@@ -58,33 +53,20 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = await db
+    const [created] = await db
       .insert(obfuscationPresets)
       .values({
         name,
         description: description || "Custom Community DPI Preset",
         category,
         protocol,
-        params: JSON.stringify(params),
+        params,
         recommendedEndpoint,
         recommendedDns,
         isOfficial: false,
         likesCount: 1,
       })
-      .run();
-
-    const created = {
-      id: Number(result.lastInsertRowid),
-      name,
-      description: description || "Custom Community DPI Preset",
-      category,
-      protocol,
-      params,
-      recommendedEndpoint,
-      recommendedDns,
-      isOfficial: false,
-      likesCount: 1,
-    };
+      .returning();
 
     return NextResponse.json({ success: true, preset: created });
   } catch (error) {

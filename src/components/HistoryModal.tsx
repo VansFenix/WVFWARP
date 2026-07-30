@@ -66,7 +66,7 @@ export function HistoryModal({
                   RECENT CONFIGURATION HISTORY
                 </h2>
                 <p className="text-[11px] text-slate-400">
-                  Stored in local SQLite database
+                  Stored in PostgreSQL database (Supabase)
                 </p>
               </div>
             </div>

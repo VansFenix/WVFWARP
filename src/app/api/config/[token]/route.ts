@@ -27,7 +27,6 @@ export async function GET(
       .where(eq(generatedConfigs.id, found.id));
 
     const [addr, portStr] = found.endpoint.split(":");
-    const obfuscation = JSON.parse(found.obfuscationParams) as ObfuscationParams;
     const reqObj: ConfigGenerateRequest = {
       title: found.title,
       protocol: found.protocol as any,
@@ -36,7 +35,7 @@ export async function GET(
       endpointAddress: addr || "162.159.193.5",
       endpointPort: parseInt(portStr || "2408", 10),
       mtu: found.mtu,
-      obfuscation,
+      obfuscation: found.obfuscationParams as ObfuscationParams,
       warpKeyMode: "custom-keypair",
       customPrivateKey: found.privateKey,
       customPublicKey: found.publicKey,
@@ -50,7 +49,7 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      config: { ...found, obfuscationParams: obfuscation },
+      config: found,
       payload,
     });
   } catch (error) {

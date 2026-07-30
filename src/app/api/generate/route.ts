@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     let dbRecordId = 0;
     try {
-      const result = await db
+      const [saved] = await db
         .insert(generatedConfigs)
         .values({
           shareToken: payload.shareToken,
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
           dnsServers: payload.dnsString,
           endpoint: payload.endpointString,
           mtu: payload.mtu,
-          obfuscationParams: JSON.stringify(payload.obfuscation),
+          obfuscationParams: payload.obfuscation,
           warpAccountType: body.warpKeyMode === "warp-plus-key" ? "WARP_PLUS" : "FREE",
           privateKey: payload.privateKey,
           publicKey: payload.publicKey,
@@ -37,8 +37,8 @@ export async function POST(request: Request) {
           routingMode: body.routingMode || "all",
           downloadsCount: 0,
         })
-        .run();
-      dbRecordId = Number(result.lastInsertRowid);
+        .returning({ id: generatedConfigs.id });
+      dbRecordId = saved.id;
     } catch (dbErr) {
       console.warn("Could not save to DB (will return generated config):", dbErr);
     }

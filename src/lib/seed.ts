@@ -16,7 +16,7 @@ export async function ensureSeeded() {
             "Recommended for bypassing TSPU / DPI in Russia & CIS. Uses AWG 2.0 magic headers and randomized junk packets.",
           category: "AWG-2.0",
           protocol: "amneziawg-2.0",
-          params: JSON.stringify({
+          params: {
             jc: 7,
             jmin: 50,
             jmax: 1000,
@@ -30,7 +30,7 @@ export async function ensureSeeded() {
             i2: "64fa8331",
             i3: "21b36991",
             i4: "78b301aa",
-          }),
+          },
           recommendedEndpoint: "162.159.193.5:2408",
           recommendedDns: "1.1.1.1, 1.0.0.1",
           isOfficial: true,
@@ -42,7 +42,7 @@ export async function ensureSeeded() {
             "Optimized for mobile operators (MTS, Megafon, Beeline, Tele2, Yota). Reduced Jmin/Jmax to preserve battery & speed.",
           category: "AWG-2.0",
           protocol: "amneziawg-2.0",
-          params: JSON.stringify({
+          params: {
             jc: 4,
             jmin: 30,
             jmax: 400,
@@ -56,7 +56,7 @@ export async function ensureSeeded() {
             i2: "c1920844",
             i3: "f0912a77",
             i4: "00823c12",
-          }),
+          },
           recommendedEndpoint: "188.114.97.3:2408",
           recommendedDns: "94.140.14.14, 94.140.15.15",
           isOfficial: true,
@@ -68,7 +68,7 @@ export async function ensureSeeded() {
             "Compatible with AmneziaWG 1.5 routers and clients. Reliable obfuscation without init signatures.",
           category: "AWG-1.5",
           protocol: "amneziawg-1.5",
-          params: JSON.stringify({
+          params: {
             jc: 3,
             jmin: 40,
             jmax: 70,
@@ -82,7 +82,7 @@ export async function ensureSeeded() {
             i2: "",
             i3: "",
             i4: "",
-          }),
+          },
           recommendedEndpoint: "162.159.192.1:2408",
           recommendedDns: "8.8.8.8, 8.8.4.4",
           isOfficial: true,
@@ -94,7 +94,7 @@ export async function ensureSeeded() {
             "High junk packet volume for severe DPI filters. Masks traffic pattern as random UDP streams.",
           category: "STEALTH",
           protocol: "amneziawg-1.5",
-          params: JSON.stringify({
+          params: {
             jc: 9,
             jmin: 80,
             jmax: 1200,
@@ -108,7 +108,7 @@ export async function ensureSeeded() {
             i2: "",
             i3: "",
             i4: "",
-          }),
+          },
           recommendedEndpoint: "188.114.96.1:2408",
           recommendedDns: "9.9.9.9, 149.112.112.112",
           isOfficial: true,
@@ -120,7 +120,7 @@ export async function ensureSeeded() {
             "Minimal obfuscation overhead for lowest ping in CS2, Valorant, Dota 2, and Discord.",
           category: "GAMING",
           protocol: "amneziawg-2.0",
-          params: JSON.stringify({
+          params: {
             jc: 2,
             jmin: 20,
             jmax: 100,
@@ -134,7 +134,7 @@ export async function ensureSeeded() {
             i2: "55667788",
             i3: "99aabbcc",
             i4: "ddeeff00",
-          }),
+          },
           recommendedEndpoint: "162.159.193.5:2408",
           recommendedDns: "1.1.1.1, 1.0.0.1",
           isOfficial: true,
@@ -146,7 +146,7 @@ export async function ensureSeeded() {
             "Optimized MTU and endpoint for Wiresocks client with application split-tunneling.",
           category: "AWG-2.0",
           protocol: "wiresocks",
-          params: JSON.stringify({
+          params: {
             jc: 5,
             jmin: 40,
             jmax: 500,
@@ -160,7 +160,7 @@ export async function ensureSeeded() {
             i2: "64fa8331",
             i3: "21b36991",
             i4: "78b301aa",
-          }),
+          },
           recommendedEndpoint: "188.114.97.3:2408",
           recommendedDns: "1.1.1.1, 1.0.0.1",
           isOfficial: true,

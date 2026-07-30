@@ -1,29 +1,26 @@
-import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import * as schema from "./schema";
-import path from "path";
-import fs from "fs";
 
-const dbPath = process.env.DB_PATH || path.join(process.cwd(), "data", "database.sqlite");
+const databaseUrl = process.env.DATABASE_URL;
 
-const dbDir = path.dirname(dbPath);
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL is required");
 }
 
 const globalForDb = globalThis as typeof globalThis & {
-  __wvfwarpSqliteClient?: ReturnType<typeof createClient>;
+  __wvfwarpPgPool?: Pool;
 };
 
-const client =
-  globalForDb.__wvfwarpSqliteClient ??
-  createClient({
-    url: `file:${dbPath}`,
+export const pool =
+  globalForDb.__wvfwarpPgPool ??
+  new Pool({
+    connectionString: databaseUrl,
   });
 
 if (process.env.NODE_ENV !== "production") {
-  globalForDb.__wvfwarpSqliteClient = client;
+  globalForDb.__wvfwarpPgPool = pool;
 }
 
-export const db = drizzle(client, { schema });
+export const db = drizzle(pool, { schema });
 export * from "./schema";

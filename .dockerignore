@@ -1,7 +1,0 @@
-node_modules
-.next
-data
-.git
-*.md
-123.txt
-test-*.mjs
