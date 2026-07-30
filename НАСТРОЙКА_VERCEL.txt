@@ -1,0 +1,5 @@
+1. Открыть https://vercel.com → ваш проект wvfwarp
+2. Settings → Environment Variables
+3. Name: DATABASE_URL
+   Value: postgresql://postgres:supreme_214**1@db.tkkydtebiicvljtbwdli.supabase.co:5432/postgres
+4. Save → Redeploy
