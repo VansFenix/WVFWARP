@@ -555,7 +555,6 @@ export function generateAmneziaWgConf(
   let conf = `[Interface]
 PrivateKey = ${keyPair.privateKey}
 Address = ${keyPair.clientV4}
-Address = ${keyPair.clientV6}
 DNS = ${dnsString}
 MTU = ${req.mtu}
 Jc = ${obf.jc}
