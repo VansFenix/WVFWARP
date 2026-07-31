@@ -495,14 +495,21 @@ export function generateRawKeyPair(): { privateKey: string; publicKey: string } 
   return { privateKey: rawPriv.toString("base64"), publicKey: rawPub.toString("base64") };
 }
 
-export async function registerWithWarp(clientPubKey: string): Promise<{
+export async function registerWithWarp(
+  clientPubKey: string,
+  warpPlusLicense?: string
+): Promise<{
   serverPubKey: string;
   clientV4: string;
   clientV6: string;
   reservedBits: string;
 } | null> {
   try {
-    const body = JSON.stringify({ key: clientPubKey });
+    const regBody: Record<string, string> = { key: clientPubKey };
+    if (warpPlusLicense) {
+      regBody.referrer = warpPlusLicense;
+    }
+    const body = JSON.stringify(regBody);
     const res = await fetch("https://api.cloudflareclient.com/v0a802/reg", {
       method: "POST",
       headers: { "Content-Type": "application/json", "User-Agent": "1.1.1.1 / 6.18 (Android 14)" },
@@ -592,6 +599,42 @@ export function resolveAllowedIps(req: ConfigGenerateRequest): string {
   return "0.0.0.0/0, ::/0";
 }
 
+export function parseReservedBits(raw?: string): number[] {
+  if (!raw) return [0, 0, 0];
+  try {
+    const parsed = JSON.parse(raw);
+    if (
+      Array.isArray(parsed) &&
+      parsed.length === 3 &&
+      parsed.every((n) => Number.isInteger(n) && n >= 0 && n <= 255)
+    ) {
+      return parsed;
+    }
+  } catch {
+    // invalid format, fall back to [0, 0, 0]
+  }
+  return [0, 0, 0];
+}
+
+function awgHValue(isV2: boolean, value: number): string {
+  return isV2 ? `${value}-${value + 99}` : String(value);
+}
+
+function usesAwgV2(protocol: string, obf: ObfuscationParams): boolean {
+  if (protocol === "amneziawg-2.0") return true;
+  if (protocol === "amneziawg-1.5") return false;
+  return [obf.i1, obf.i2, obf.i3, obf.i4].some((v) => Boolean(v));
+}
+
+function isAwgProtocol(protocol: string): boolean {
+  return (
+    protocol === "amneziawg-2.0" ||
+    protocol === "amneziawg-1.5" ||
+    protocol === "clash-meta" ||
+    protocol === "sing-box"
+  );
+}
+
 export function generateAmneziaWgConf(
   req: ConfigGenerateRequest,
   keyPair: {
@@ -605,12 +648,13 @@ export function generateAmneziaWgConf(
   const obf = req.obfuscation;
   const isV2 = req.protocol === "amneziawg-2.0";
   const ep = `${req.endpointAddress}:${req.endpointPort}`;
-  const allowedIps = req.routingMode === "all" ? "0.0.0.0/0" : resolveAllowedIps(req);
+  const allowedIps = resolveAllowedIps(req);
+  const dnsString = resolveDnsServers(req);
 
   let conf = `[Interface]
 PrivateKey = ${keyPair.privateKey}
-Address = ${keyPair.clientV4}
-DNS = 1.1.1.1
+Address = ${keyPair.clientV4}, ${keyPair.clientV6}
+DNS = ${dnsString}
 MTU = ${req.mtu}
 Jc = ${obf.jc}
 Jmin = ${obf.jmin}
@@ -715,11 +759,16 @@ export function generateClashMetaYaml(
     .map((s) => s.trim())
     .filter(Boolean);
   const obf = req.obfuscation;
-  const isAwg = req.protocol.includes("amneziawg");
-  const isV2 = req.protocol === "amneziawg-2.0";
+  const isAwg = isAwgProtocol(req.protocol);
+  const isV2 = usesAwgV2(req.protocol, obf);
 
   const cleanIp4 = keyPair.clientV4.replace("/32", "");
   const cleanIp6 = keyPair.clientV6.replace("/128", "");
+  const reservedArr = parseReservedBits(keyPair.reservedBits);
+  const allowedIps = resolveAllowedIps(req)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   let yaml = `# WVFWARP — Clash Meta / Mihomo Configuration
 # Compatible with Mihomo, Sing-Box (clash mode), Clash Verge Rev
@@ -737,10 +786,10 @@ dns:
   ipv6: true
   enhanced-mode: fake-ip
   nameserver:
+    - https://dns.google/dns-query
 `;
   dnsServers.forEach((dns) => {
-    yaml += `    - "https://dns.google/dns-query"
-    - "udp://${dns}"
+    yaml += `    - udp://${dns}
 `;
   });
 
@@ -755,29 +804,34 @@ proxies:
     public-key: ${keyPair.publicKey}
     private-key: ${keyPair.privateKey}
     mtu: ${req.mtu}
+    reserved: ${JSON.stringify(reservedArr)}
+    allowed-ips: [${allowedIps.map((ip) => `'${ip}'`).join(", ")}]
     remote-dns-resolve: true
     udp: true
 `;
 
   if (isAwg) {
     yaml += `    # AmneziaWG Obfuscation parameters for DPI Bypass
-    amneziawg:
+    amnezia-wg-option:
       jc: ${obf.jc}
       jmin: ${obf.jmin}
       jmax: ${obf.jmax}
       s1: ${obf.s1}
       s2: ${obf.s2}
-      h1: ${obf.h1}
-      h2: ${obf.h2}
-      h3: ${obf.h3}
-      h4: ${obf.h4}
+      s3: ${obf.s1}
+      s4: ${obf.s2}
+      h1: ${awgHValue(isV2, obf.h1)}
+      h2: ${awgHValue(isV2, obf.h2)}
+      h3: ${awgHValue(isV2, obf.h3)}
+      h4: ${awgHValue(isV2, obf.h4)}
 `;
-    if (isV2) {
-      yaml += `      i1: "${obf.i1 || "4cfa7107"}"
-      i2: "${obf.i2 || "64fa8331"}"
-      i3: "${obf.i3 || "21b36991"}"
-      i4: "${obf.i4 || "78b301aa"}"
+    if (isAwg) {
+      [obf.i1, obf.i2, obf.i3, obf.i4].forEach((ip, idx) => {
+        if (ip) {
+          yaml += `      i${idx + 1}: "<b 0x${ip}>"
 `;
+        }
+      });
     }
   }
 
@@ -812,8 +866,61 @@ export function generateSingBoxJson(
     .map((s) => s.trim())
     .filter(Boolean);
   const obf = req.obfuscation;
-  const isAwg = req.protocol.includes("amneziawg");
-  const isV2 = req.protocol === "amneziawg-2.0";
+  const isAwg = isAwgProtocol(req.protocol);
+  const isV2 = usesAwgV2(req.protocol, obf);
+  const reservedArr = parseReservedBits(keyPair.reservedBits);
+  const allowedIps = resolveAllowedIps(req)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const outbound: any = isAwg
+    ? {
+        type: "awg",
+        tag: "wvfwarp-out",
+        private_key: keyPair.privateKey,
+        address: [keyPair.clientV4, keyPair.clientV6],
+        mtu: req.mtu,
+        jc: obf.jc,
+        jmin: obf.jmin,
+        jmax: obf.jmax,
+        s1: obf.s1,
+        s2: obf.s2,
+        s3: obf.s1,
+        s4: obf.s2,
+        h1: awgHValue(isV2, obf.h1),
+        h2: awgHValue(isV2, obf.h2),
+        h3: awgHValue(isV2, obf.h3),
+        h4: awgHValue(isV2, obf.h4),
+        peers: [
+          {
+            address: req.endpointAddress,
+            port: req.endpointPort,
+            public_key: keyPair.publicKey,
+            allowed_ips: allowedIps,
+            persistent_keepalive_interval: 25,
+          },
+        ],
+      }
+    : {
+        type: "wireguard",
+        tag: "wvfwarp-out",
+        server: req.endpointAddress,
+        server_port: req.endpointPort,
+        local_address: [keyPair.clientV4, keyPair.clientV6],
+        private_key: keyPair.privateKey,
+        peer_public_key: keyPair.publicKey,
+        mtu: req.mtu,
+        reserved: reservedArr,
+      };
+
+  if (isAwg) {
+    [obf.i1, obf.i2, obf.i3, obf.i4].forEach((ip, idx) => {
+      if (ip) {
+        outbound[`i${idx + 1}`] = ip;
+      }
+    });
+  }
 
   const jsonConfig: any = {
     log: {
@@ -821,13 +928,11 @@ export function generateSingBoxJson(
       timestamp: true,
     },
     dns: {
-      servers: [
-        {
-          tag: "default-dns",
-          address: dnsServers[0] || "1.1.1.1",
-          detour: "wvfwarp-out",
-        },
-      ],
+      servers: dnsServers.map((dns, idx) => ({
+        tag: `wvfwarp-dns-${idx}`,
+        address: dns,
+        detour: "wvfwarp-out",
+      })),
     },
     inbounds: [
       {
@@ -838,44 +943,13 @@ export function generateSingBoxJson(
       },
     ],
     outbounds: [
-      {
-        type: "wireguard",
-        tag: "wvfwarp-out",
-        server: req.endpointAddress,
-        server_port: req.endpointPort,
-        local_address: [keyPair.clientV4, keyPair.clientV6],
-        private_key: keyPair.privateKey,
-        peer_public_key: keyPair.publicKey,
-        mtu: req.mtu,
-        reserved: [0, 0, 0],
-      },
+      outbound,
       {
         type: "direct",
         tag: "direct",
       },
     ],
   };
-
-  if (isAwg) {
-    const obfObj: any = {
-      jc: obf.jc,
-      jmin: obf.jmin,
-      jmax: obf.jmax,
-      s1: obf.s1,
-      s2: obf.s2,
-      h1: obf.h1,
-      h2: obf.h2,
-      h3: obf.h3,
-      h4: obf.h4,
-    };
-    if (isV2) {
-      obfObj.i1 = obf.i1 || "4cfa7107";
-      obfObj.i2 = obf.i2 || "64fa8331";
-      obfObj.i3 = obf.i3 || "21b36991";
-      obfObj.i4 = obf.i4 || "78b301aa";
-    }
-    jsonConfig.outbounds[0].amnezia = obfObj;
-  }
 
   return JSON.stringify(jsonConfig, null, 2);
 }
@@ -905,7 +979,10 @@ export async function generateFullConfig(
     };
   } else {
     const rawKey = generateRawKeyPair();
-    const reg = await registerWithWarp(rawKey.publicKey);
+    const reg = await registerWithWarp(
+      rawKey.publicKey,
+      req.warpKeyMode === "warp-plus-key" ? req.warpPlusLicense : undefined
+    );
     if (reg) {
       keyPair = {
         privateKey: rawKey.privateKey,
