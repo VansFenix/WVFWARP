@@ -291,147 +291,147 @@ export const DEFAULT_OBFUSCATION_PARAMS: Record<string, ObfuscationParams> = {
     jc: 3,
     jmin: 4,
     jmax: 911,
-    s1: 84,
-    s2: 54,
-    h1: 1778114400,
-    h2: 1140023414,
-    h3: 1883501258,
-    h4: 1346001719,
-    i1: "4cfa7107",
-    i2: "64fa8331",
-    i3: "21b36991",
-    i4: "78b301aa",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "tspu-118-22-1000": {
     jc: 118,
     jmin: 22,
     jmax: 1000,
-    s1: 84,
-    s2: 54,
-    h1: 1829340911,
-    h2: 1439201923,
-    h3: 1782392811,
-    h4: 1283920191,
-    i1: "e02b7811",
-    i2: "c1920844",
-    i3: "f0912a77",
-    i4: "00823c12",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "tspu-5-10-40": {
     jc: 5,
     jmin: 10,
     jmax: 40,
-    s1: 70,
-    s2: 90,
-    h1: 1033100222,
-    h2: 1938392111,
-    h3: 1782390123,
-    h4: 1293847291,
-    i1: "4cfa7107",
-    i2: "64fa8331",
-    i3: "21b36991",
-    i4: "78b301aa",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "tspu-5-40-70": {
     jc: 5,
     jmin: 40,
     jmax: 70,
-    s1: 64,
-    s2: 64,
-    h1: 1778114400,
-    h2: 1140023414,
-    h3: 1883501258,
-    h4: 1346001719,
-    i1: "4cfa7107",
-    i2: "64fa8331",
-    i3: "21b36991",
-    i4: "78b301aa",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "tspu-4-40-70": {
     jc: 4,
     jmin: 40,
     jmax: 70,
-    s1: 84,
-    s2: 54,
-    h1: 1010101,
-    h2: 2020202,
-    h3: 3030303,
-    h4: 4040404,
-    i1: "11223344",
-    i2: "55667788",
-    i3: "99aabbcc",
-    i4: "ddeeff00",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "tspu-3-1-3": {
     jc: 3,
     jmin: 1,
     jmax: 3,
-    s1: 40,
-    s2: 40,
-    h1: 1555444333,
-    h2: 1444333222,
-    h3: 1333222111,
-    h4: 1222111000,
-    i1: "4cfa7107",
-    i2: "64fa8331",
-    i3: "21b36991",
-    i4: "78b301aa",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "junk-one-long-l1": {
     jc: 1,
     jmin: 900,
     jmax: 1250,
-    s1: 150,
-    s2: 54,
-    h1: 1778114400,
-    h2: 1140023414,
-    h3: 1883501258,
-    h4: 1346001719,
-    i1: "4cfa7107",
-    i2: "64fa8331",
-    i3: "21b36991",
-    i4: "78b301aa",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "junk-multi-short-l123": {
     jc: 6,
     jmin: 12,
     jmax: 48,
-    s1: 36,
-    s2: 48,
-    h1: 1829340911,
-    h2: 1439201923,
-    h3: 1782392811,
-    h4: 1283920191,
-    i1: "e02b7811",
-    i2: "c1920844",
-    i3: "f0912a77",
-    i4: "00823c12",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "awg2.0-default": {
     jc: 7,
     jmin: 50,
     jmax: 1000,
-    s1: 84,
-    s2: 54,
-    h1: 1778114400,
-    h2: 1140023414,
-    h3: 1883501258,
-    h4: 1346001719,
-    i1: "4cfa7107",
-    i2: "64fa8331",
-    i3: "21b36991",
-    i4: "78b301aa",
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
+    i1: "",
+    i2: "",
+    i3: "",
+    i4: "",
   },
   "awg1.5-classic": {
-    jc: 3,
+    jc: 4,
     jmin: 40,
     jmax: 70,
-    s1: 40,
-    s2: 80,
-    h1: 1010101,
-    h2: 2020202,
-    h3: 3030303,
-    h4: 4040404,
+    s1: 0,
+    s2: 0,
+    h1: 1,
+    h2: 2,
+    h3: 3,
+    h4: 4,
     i1: "",
     i2: "",
     i3: "",
@@ -495,6 +495,26 @@ export function generateRawKeyPair(): { privateKey: string; publicKey: string } 
   return { privateKey: rawPriv.toString("base64"), publicKey: rawPub.toString("base64") };
 }
 
+const CF_API_BASE_URL = "https://api.cloudflareclient.com/v0i1909051800";
+
+function reservedFromClientId(clientId?: string): string {
+  if (!clientId) return "[0, 0, 0]";
+  try {
+    const clean = clientId.replace(/-/g, "+").replace(/_/g, "/");
+    const bin = atob(clean);
+    const bytes: number[] = [];
+    for (let i = 0; i < bin.length; i++) {
+      bytes.push(bin.charCodeAt(i));
+    }
+    if (bytes.length >= 3) {
+      return `[${bytes[0]}, ${bytes[1]}, ${bytes[2]}]`;
+    }
+  } catch {
+    // invalid base64, fall back to [0, 0, 0]
+  }
+  return "[0, 0, 0]";
+}
+
 export async function registerWithWarp(
   clientPubKey: string,
   warpPlusLicense?: string
@@ -504,26 +524,54 @@ export async function registerWithWarp(
   clientV6: string;
   reservedBits: string;
 } | null> {
+  const headers = {
+    "Content-Type": "application/json",
+    "User-Agent": "okhttp/3.12.1",
+  };
   try {
-    const regBody: Record<string, string> = { key: clientPubKey };
+    // 1. Register the device (wgcf-style full body)
+    const regBody: Record<string, string> = {
+      install_id: "",
+      tos: new Date().toISOString(),
+      key: clientPubKey,
+      fcm_token: "",
+      type: "ios",
+      locale: "en_US",
+    };
     if (warpPlusLicense) {
       regBody.referrer = warpPlusLicense;
     }
-    const body = JSON.stringify(regBody);
-    const res = await fetch("https://api.cloudflareclient.com/v0a802/reg", {
+    const regRes = await fetch(`${CF_API_BASE_URL}/reg`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "User-Agent": "1.1.1.1 / 6.18 (Android 14)" },
-      body,
+      headers,
+      body: JSON.stringify(regBody),
     });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const v4 = data.config?.interface?.addresses?.v4 || "172.16.0.2";
-    const v6 = data.config?.interface?.addresses?.v6 || "2606:4700:110:8f00::1/128";
+    if (!regRes.ok) return null;
+    const regData = await regRes.json();
+    const clientId: string | undefined = regData.result?.id;
+    const token: string | undefined = regData.result?.token;
+    if (!clientId || !token) return null;
+
+    // 2. Enable WARP — the PATCH response contains the real tunnel config
+    const warpRes = await fetch(`${CF_API_BASE_URL}/reg/${clientId}`, {
+      method: "PATCH",
+      headers: { ...headers, Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ warp_enabled: true }),
+    });
+    if (!warpRes.ok) return null;
+    const warpData = await warpRes.json();
+    const cfg = warpData.result?.config;
+    const peer = cfg?.peers?.[0];
+    const iface = cfg?.interface;
+
+    const v4 = iface?.addresses?.v4 || "172.16.0.2";
+    const v6 = iface?.addresses?.v6 || "2606:4700:110:8f00::1/128";
     return {
-      serverPubKey: data.config?.peers?.[0]?.public_key || "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      serverPubKey:
+        peer?.public_key || "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
       clientV4: v4.includes("/") ? v4 : `${v4}/32`,
       clientV6: v6.includes("/") ? v6 : `${v6}/128`,
-      reservedBits: "[0, 0, 0]",
+      reservedBits: reservedFromClientId(cfg?.client_id),
     };
   } catch {
     return null;
@@ -983,17 +1031,18 @@ export async function generateFullConfig(
       rawKey.publicKey,
       req.warpKeyMode === "warp-plus-key" ? req.warpPlusLicense : undefined
     );
-    if (reg) {
-      keyPair = {
-        privateKey: rawKey.privateKey,
-        publicKey: reg.serverPubKey,
-        clientV4: reg.clientV4,
-        clientV6: reg.clientV6,
-        reservedBits: reg.reservedBits,
-      };
-    } else {
-      keyPair = generateWireGuardKeyPair();
+    if (!reg) {
+      throw new Error(
+        "Не удалось зарегистрироваться в Cloudflare WARP. Попробуйте ещё раз."
+      );
     }
+    keyPair = {
+      privateKey: rawKey.privateKey,
+      publicKey: reg.serverPubKey,
+      clientV4: reg.clientV4,
+      clientV6: reg.clientV6,
+      reservedBits: reg.reservedBits,
+    };
   }
 
   const randomId = String(Math.floor(1000000 + Math.random() * 9000000));

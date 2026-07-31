@@ -49,22 +49,24 @@ export function ObfuscationStudio({
   };
 
   const randomizeHeaders = () => {
-    const rInt = () => Math.floor(1000000000 + Math.random() * 1000000000);
-    const rHex = () =>
-      Math.floor(Math.random() * 0xffffffff)
-        .toString(16)
-        .padStart(8, "0");
+    const rInt = (min: number, max: number) =>
+      Math.floor(min + Math.random() * (max - min + 1));
 
     onChange({
       ...obf,
-      h1: rInt(),
-      h2: rInt(),
-      h3: rInt(),
-      h4: rInt(),
-      i1: rHex(),
-      i2: rHex(),
-      i3: rHex(),
-      i4: rHex(),
+      jc: rInt(2, 12),
+      jmin: rInt(1, 50),
+      jmax: rInt(40, 200),
+      s1: 0,
+      s2: 0,
+      h1: 1,
+      h2: 2,
+      h3: 3,
+      h4: 4,
+      i1: "",
+      i2: "",
+      i3: "",
+      i4: "",
     });
   };
 

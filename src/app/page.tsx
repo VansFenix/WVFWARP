@@ -39,7 +39,7 @@ export default function WvfWarpHomePage() {
 
   // Generator State
   const [configTitle, setConfigTitle] = useState("");
-  const [protocol, setProtocol] = useState<ProtocolType>("amneziawg-2.0");
+  const [protocol, setProtocol] = useState<ProtocolType>("amneziawg-1.5");
   const [dnsProviderId, setDnsProviderId] = useState("tier1-combo-5");
   const [customDnsServers, setCustomDnsServers] = useState("1.1.1.1, 8.8.8.8");
   const [endpointId, setEndpointId] = useState("cf-ip-2");
@@ -53,7 +53,7 @@ export default function WvfWarpHomePage() {
 
   // Obfuscation state
   const [obfuscation, setObfuscation] = useState<ObfuscationParams>({
-    ...DEFAULT_OBFUSCATION_PARAMS["awg2.0-default"],
+    ...DEFAULT_OBFUSCATION_PARAMS["awg1.5-classic"],
   });
 
   // WARP Account / Key mode
@@ -182,10 +182,6 @@ export default function WvfWarpHomePage() {
       toast.error("Failed to fetch configuration");
     }
   };
-
-  useEffect(() => {
-    handleGenerateConfig();
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#05070d] text-slate-100 flex flex-col">
